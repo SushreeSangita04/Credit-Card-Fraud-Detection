@@ -2,21 +2,18 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
 import streamlit as st
+
+st.set_page_config(page_title="Credit Card Fraud Detection", layout="centered")
 
 @st.cache_data
 def load_and_train():
-    data = pd.read_csv("creditcard.csv")
+    # Load small dataset from GitHub
+    url = "https://raw.githubusercontent.com/SushreeSangita04/Credit-Card-Fraud-Detection/main/new.csv"
+    data = pd.read_csv(url)
 
-    legit = data[data.Class == 0]
-    fraud = data[data.Class == 1]
-
-    legit_sample = legit.sample(n=492, random_state=2)
-    new_dataset = pd.concat([legit_sample, fraud], axis=0)
-
-    X = new_dataset.drop(columns='Class', axis=1)
-    y = new_dataset['Class']
+    X = data.drop(columns='Class', axis=1)
+    y = data['Class']
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, stratify=y, random_state=42
@@ -30,7 +27,7 @@ def load_and_train():
 model, feature_names = load_and_train()
 
 st.title("Credit Card Fraud Detection")
-st.write("Enter feature values separated by commas:")
+st.write("Enter transaction feature values separated by commas:")
 
 input_data = st.text_input(f"Enter {len(feature_names)} values:")
 
@@ -38,7 +35,6 @@ if st.button("Predict"):
     try:
         input_list = input_data.split(",")
         features = np.array(input_list, dtype=float)
-
         prediction = model.predict(features.reshape(1, -1))
 
         if prediction[0] == 0:
@@ -47,4 +43,4 @@ if st.button("Predict"):
             st.error("Fraudulent Transaction")
 
     except:
-        st.warning("Please enter valid numeric values separated by commas.")
+        st.warning("⚠ Please enter valid numeric values separated by commas.")
