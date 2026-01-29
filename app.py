@@ -9,7 +9,7 @@ st.set_page_config(page_title="Credit Card Fraud Detection", layout="centered")
 @st.cache_data
 def load_and_train():
     # Load small dataset from GitHub
-    url = "https://raw.githubusercontent.com/SushreeSangita04/Credit-Card-Fraud-Detection/main/new.csv"
+    url = "https://raw.githubusercontent.com/SushreeSangita04/Credit-Card-Fraud-Detection/main/new_dataset.csv"
     data = pd.read_csv(url)
 
     X = data.drop(columns='Class', axis=1)
